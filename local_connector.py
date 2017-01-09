@@ -25,6 +25,9 @@ class Writer:
   def checkHash(self, otherHash):
     if self.md5.hexdigest() != otherHash:
       raise Exception("File hash mismatch at offset %d" % self.offset)
+  
+  def close(self):
+    self.file.close()
     
 class Reader:
   def __init__(self, url):
@@ -32,6 +35,11 @@ class Reader:
     self.file = open(url.path, 'rb')
     self.offset = 0
     self.md5 = hashlib.md5()
+    self.getFilesize()
+    
+  def getFilesize(self):
+    statinfo = os.stat(self.path)
+    self.filesize = statinfo.st_size
     
   def getBlock(self):
     data = self.file.read(DataBlock.blockSize)
@@ -41,7 +49,11 @@ class Reader:
     self.offset += len(data)
     self.md5.update(data)
     incrementalHash = self.md5.hexdigest()
-    return DataBlock(self.path, startOffset, data, incrementalHash)
+    return DataBlock(self.path, startOffset, data, incrementalHash, self.filesize)
   
   def hash(self):
     return self.md5.hexdigest()
+    
+  def close(self):
+    self.file.close()
+  

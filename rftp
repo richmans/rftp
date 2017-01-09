@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 from rabbit_file_transfer import *
 import sys
+from progress import  ProgressMeter
 def exitUsage():
-  print("Usage receiving: rftp /local/file rftp://user@host:password/queue_name")
-  print("Usage sending  : rftp rftp://user@host:password/ /local/file")
+  print("Usage sending: rftp /local/file rftp://user@host:password/queue_name")
+  print("Usage receiving  : rftp rftp://user@host:password/ /local/file")
   sys.exit(1)
 
 # parse arguments
@@ -17,13 +18,24 @@ destination_uri = sys.argv[2]
 rftp = RabbitFileTransfer()
 source = rftp.getReader(source_uri)
 destination = rftp.getWriter(destination_uri)
+
 if source == None or destination == None:
   exitUsage()
 
+progress = ProgressMeter(source)
+progress.start()
+
 # run  
-block = source.getBlock()
-while block != None:
-  destination.putBlock(block)
+try:
   block = source.getBlock()
-  
-print("Done!")
+  while block != None:
+    destination.putBlock(block)
+    block = source.getBlock()
+except Exception as e:
+  print("Transfer error: " + str(e))
+
+progress.stop()
+source.close()
+destination.close()
+
+print("\nDone!")
