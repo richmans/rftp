@@ -5,12 +5,13 @@ Let's say your rabbitmq data diode has an inside address of 192.168.1.15, and an
 
 *First* you start the receiver on the 'inside' with a filename you want to write to
 
-    inside-host$ rftp receive rftp://192.168.1.15 my-app.deb
-		Receiver ready, listening to queue f34Azms3
-		...
+    inside-host$ ./rftp rftp://user:pass@192.168.1.15/ my-app.deb
+		Waiting for data on queue 6QFZVF. You can now start the sender!
 
 *Then* you start the sender on the 'outside', providing the queue id shown by the receiver
 
-    outside-host$ rftp send my-app.deb rftp://5.5.5.23/f34Azms3
+    outside-host$ rftp  my-app.deb rftp://user:pass@5.5.5.23/6QFZVF
+		[============================================================] 100.0%
+		Done!
 		outside-host$
 

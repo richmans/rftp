@@ -4,7 +4,7 @@ import sys
 from progress import  ProgressMeter
 def exitUsage():
   print("Usage sending: rftp /local/file rftp://user@host:password/queue_name")
-  print("Usage receiving  : rftp rftp://user@host:password/ /local/file")
+  print("Usage receiving: rftp rftp://user@host:password/ /local/file")
   sys.exit(1)
 
 # parse arguments
