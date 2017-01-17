@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from rabbit_file_transfer import *
 import sys
-from progress import  ProgressMeter
+from progress_meter import  ProgressMeter
 def exitUsage():
   print("Usage sending: rftp /local/file rftp://user@host:password/queue_name")
   print("Usage receiving: rftp rftp://user@host:password/ /local/file")
